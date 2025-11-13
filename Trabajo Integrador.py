@@ -202,10 +202,7 @@ def main():
             continue  
 
         opcion_num = int(opcion)
-        if opcion_num < 0 or opcion_num > 7:
-            print("Ingreso un número que no está en el menú.")
-            continue
-
+        
         # Opciones
         if opcion == '1':
             nombre = input("Ingrese nombre: ")
@@ -218,14 +215,14 @@ def main():
             listar_paises(resultados)
 
         elif opcion == '3':
-            print("Rango de población (deje vacío para no limitar):")
+            print("Rango de población :")
             min_p = pedir_entero("Mínimo: ")
             max_p = pedir_entero("Máximo: ")
             resultados = filtrar_por_poblacion(paises, min_p, max_p)
             listar_paises(resultados)
 
         elif opcion == '4':
-            print("Rango de superficie (deje vacío para no limitar):")
+            print("Rango de superficie:")
             min_s = pedir_entero("Mínimo: ")
             max_s = pedir_entero("Máximo: ")
             resultados = filtrar_por_superficie(paises, min_s, max_s)
@@ -263,9 +260,17 @@ def main():
 
         elif opcion == '7':
             listar_paises(paises)
+        elif not opcion.isdigit():
+            print("No ingrese texto, ingrese un número del 0 al 7.")
+            continue 
+        elif opcion_num < 0 or opcion_num > 7:
+            print("Ingreso un número que no está en el menú.")
+            continue
 
         elif opcion == '0':
             print("Programa finalizado. ¡Hasta luego!")
+            break
 
+        o
 
 main()
