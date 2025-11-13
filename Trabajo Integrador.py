@@ -21,7 +21,6 @@ def pedir_entero(mensaje):
         return pedir_entero(mensaje)
 
 #Carga y validación del CSV
-
 def cargar_paises(archivo_csv):
     paises = []
     errores = []
@@ -36,19 +35,19 @@ def cargar_paises(archivo_csv):
             continente = fila.get('continente', '').strip()
 
             if nombre == '':
-                errores.append(f"Fila {fila_num -1}: nombre vacío.")
+                errores.append(f"Fila {fila_num - 1}: nombre vacío.")
                 continue
 
             if poblacion is None:
-                errores.append(f"Fila {fila_num -1} ({nombre or 'sin nombre'}): población inválida.")
+                errores.append(f"Fila {fila_num - 1} ({nombre or 'sin nombre'}): población inválida.")
                 continue
 
             if superficie is None:
-                errores.append(f"Fila {fila_num -1} ({nombre or 'sin nombre'}): superficie inválida.")
+                errores.append(f"Fila {fila_num - 1} ({nombre or 'sin nombre'}): superficie inválida.")
                 continue
 
             if continente == '':
-                errores.append(f"Fila {fila_num -1} ({nombre or 'sin nombre'}): continente vacío.")
+                errores.append(f"Fila {fila_num - 1} ({nombre or 'sin nombre'}): continente vacío.")
                 continue
 
             paises.append({
@@ -119,7 +118,7 @@ def ordenar_paises(paises, clave, descendente):
                         paises[i], paises[j] = paises[j], paises[i]
                 else:
                     if paises[i]['poblacion'] > paises[j]['poblacion']:
-                        paises[i], paises[j] = paises[j], paises[i]
+                        paises[i], paises[j] = pases[j], paises[i]
     elif clave == 'superficie':
         for i in range(len(paises) - 1):
             for j in range(i + 1, len(paises)):
@@ -226,94 +225,97 @@ def main():
 
         opcion = input("Elija una opcion: ").strip()
 
-        # Validacion Menu
+        #Verificar que sea un dígito
         if not opcion.isdigit():
             print("No ingrese texto, ingrese un número del 0 al 7.")
             continue  
 
-        opcion1 = int(opcion)
-        
-        # Opciones
-        if opcion == '1':
-            nombre = input("\nIngrese nombre: ")
-            resultados = buscar_por_nombre(paises, nombre)
-            listar_paises(resultados)
+        #Match case para verificar lo elegido
+        match opcion:
+            case '1':
+                nombre = input("\nIngrese nombre: ")
+                resultados = buscar_por_nombre(paises, nombre)
+                listar_paises(resultados)
 
-        elif opcion == '2':
-            cont = input("\nIngrese continente: ")
-            print("")
-            resultados = filtrar_por_continente(paises, cont)
-            listar_paises(resultados)
+            case '2':
+                cont = input("\nIngrese continente: ")
+                print("")
+                resultados = filtrar_por_continente(paises, cont)
+                listar_paises(resultados)
 
-        elif opcion == '3':
-            print("\nRango de población :")
-            min_p = pedir_entero("Mínimo: ")
-            max_p = pedir_entero("Máximo: ")
-            print("")
-            resultados = filtrar_por_poblacion(paises, min_p, max_p)
-            listar_paises(resultados)
+            case '3':
+                print("\nRango de población :")
+                min_p = pedir_entero("Mínimo: ")
+                max_p = pedir_entero("Máximo: ")
+                print("")
+                resultados = filtrar_por_poblacion(paises, min_p, max_p)
+                listar_paises(resultados)
 
-        elif opcion == '4':
-            print("\nRango de superficie")
-            min_s = pedir_entero("Mínimo: ")
-            max_s = pedir_entero("Máximo: ")
-            print("")
-            resultados = filtrar_por_superficie(paises, min_s, max_s)
-            listar_paises(resultados)
+            case '4':
+                print("\nRango de superficie")
+                min_s = pedir_entero("Mínimo: ")
+                max_s = pedir_entero("Máximo: ")
+                print("")
+                resultados = filtrar_por_superficie(paises, min_s, max_s)
+                listar_paises(resultados)
 
-        elif opcion == '5':
-            print("\n¿De que forma lo quiere ordenar?")
-            print("1. Por nombre ascendente")
-            print("2. Por nombre descendente")
-            print("3. Por población ascendente")
-            print("4. Por población descendente")
-            print("5. Por superficie ascendente")
-            print("6. Por superficie descendente")
+            case '5':
+                print("\n¿De que forma lo quiere ordenar?")
+                print("1. Por nombre ascendente")
+                print("2. Por nombre descendente")
+                print("3. Por población ascendente")
+                print("4. Por población descendente")
+                print("5. Por superficie ascendente")
+                print("6. Por superficie descendente")
 
-            sub = input("Elija una opción: ").strip()
-            if sub == '1':
-                ordenar_paises(paises, 'nombre', False)
-            elif sub == '2':
-                ordenar_paises(paises, 'nombre', True)
-            elif sub == '3':
-                ordenar_paises(paises, 'poblacion', False)
-            elif sub == '4':
-                ordenar_paises(paises, 'poblacion', True)
-            elif sub == '5':
-                ordenar_paises(paises, 'superficie', False)
-            elif sub == '6':
-                ordenar_paises(paises, 'superficie', True)
-            print("")
-            listar_paises(paises)
+                sub = input("Elija una opción: ").strip()
+                
+                match sub:
+                    case '1':
+                        ordenar_paises(paises, 'nombre', False)
+                    case '2':
+                        ordenar_paises(paises, 'nombre', True)
+                    case '3':
+                        ordenar_paises(paises, 'poblacion', False)
+                    case '4':
+                        ordenar_paises(paises, 'poblacion', True)
+                    case '5':
+                        ordenar_paises(paises, 'superficie', False)
+                    case '6':
+                        ordenar_paises(paises, 'superficie', True)
+                    case _:
+                        print("Opción inválida para ordenamiento.")
+                        continue
+                
+                print("")
+                listar_paises(paises)
 
-        elif opcion == '6':
-            mayor, menor = estadistica_mayor_o_menor_poblacion(paises)
-            mas, menos = estadistica_mayor_o_menor_superficie(paises)
-            print("\n    ESTADÍSTICAS    \n")
-            if mayor and menor:
-                print(f"País con mayor población: {mayor['nombre']} | Población: {mayor['poblacion']}" )
-                print(f"País con menor población: {menor['nombre']} | Población: {menor['poblacion']}")
-            if mas and menos:
-                print(f"País con mayor superficie: {mas['nombre']} | Superficie: {mas['superficie']}")
-                print(f"País con menor superficie: {menos['nombre']} | Superficie: {menos['superficie']}")
-            print(f"Promedio de población: {promedio_poblacion(paises):.2f} en {len(paises)} paises")
-            print(f"Promedio de superficie: {promedio_superficie(paises):.2f} km² en {len(paises)} paises")
-            print("Cantidad de paises por continente:")
-            conteo = cantidad_paises_cont(paises)
-            for c, n in conteo.items(): #.items devuelve cada clave (c) y valor (n)
-                print(f" - {c}: {n}")
+            case '6':
+                mayor, menor = estadistica_mayor_o_menor_poblacion(paises)
+                mas, menos = estadistica_mayor_o_menor_superficie(paises)
+                print("\n    ESTADÍSTICAS    \n")
+                if mayor and menor:
+                    print(f"País con mayor población: {mayor['nombre']} | Población: {mayor['poblacion']}")
+                    print(f"País con menor población: {menor['nombre']} | Población: {menor['poblacion']}")
+                if mas and menos:
+                    print(f"País con mayor superficie: {mas['nombre']} | Superficie: {mas['superficie']}")
+                    print(f"País con menor superficie: {menos['nombre']} | Superficie: {menos['superficie']}")
+                print(f"Promedio de población: {promedio_poblacion(paises):.2f} en {len(paises)} paises")
+                print(f"Promedio de superficie: {promedio_superficie(paises):.2f} km² en {len(paises)} paises")
+                print("Cantidad de paises por continente:")
+                conteo = cantidad_paises_cont(paises)
+                for c, n in conteo.items():
+                    print(f" - {c}: {n}")
 
-        elif opcion == '7':
-            print("")
-            listar_paises(paises)
-        elif not opcion.isdigit():
-            print("No puede ingresar texto, ingrese un numero del 0 al 7")
-            continue 
-        elif opcion1 < 0 or opcion1 > 7:
-            print("Ingreso un número que no está en el menú")
-            continue
+            case '7':
+                print("")
+                listar_paises(paises)
 
-        elif opcion == '0':
-            print("\nPrograma finalizado.")
-   
-main()
+            case '0':
+                print("\nPrograma finalizado.")
+
+            case _:
+                print("Ingreso un número que no está en el menú")
+
+if __name__ == "__main__":
+    main()
