@@ -118,7 +118,7 @@ def ordenar_paises(paises, clave, descendente):
                         paises[i], paises[j] = paises[j], paises[i]
                 else:
                     if paises[i]['poblacion'] > paises[j]['poblacion']:
-                        paises[i], paises[j] = pases[j], paises[i]
+                        paises[i], paises[j] = paises[j], paises[i]
     elif clave == 'superficie':
         for i in range(len(paises) - 1):
             for j in range(i + 1, len(paises)):
@@ -260,33 +260,39 @@ def main():
                 listar_paises(resultados)
 
             case '5':
-                print("\n¿De que forma lo quiere ordenar?")
-                print("1. Por nombre ascendente")
-                print("2. Por nombre descendente")
-                print("3. Por población ascendente")
-                print("4. Por población descendente")
-                print("5. Por superficie ascendente")
-                print("6. Por superficie descendente")
+                while True:
+                    print("\n¿De qué forma lo quiere ordenar?")
+                    print("1. Por nombre ascendente")
+                    print("2. Por nombre descendente")
+                    print("3. Por población ascendente")
+                    print("4. Por población descendente")
+                    print("5. Por superficie ascendente")
+                    print("6. Por superficie descendente")
 
-                sub = input("Elija una opción: ").strip()
-                
-                match sub:
-                    case '1':
-                        ordenar_paises(paises, 'nombre', False)
-                    case '2':
-                        ordenar_paises(paises, 'nombre', True)
-                    case '3':
-                        ordenar_paises(paises, 'poblacion', False)
-                    case '4':
-                        ordenar_paises(paises, 'poblacion', True)
-                    case '5':
-                        ordenar_paises(paises, 'superficie', False)
-                    case '6':
-                        ordenar_paises(paises, 'superficie', True)
-                    case _:
-                        print("Opción inválida para ordenamiento.")
-                        continue
-                
+                    sub = input("Elija una opción: ").strip()
+            
+                    match sub:
+                        case '1':
+                            ordenar_paises(paises, 'nombre', False)
+                            break  # Sale del while cuando es válido
+                        case '2':
+                            ordenar_paises(paises, 'nombre', True)
+                            break
+                        case '3':
+                            ordenar_paises(paises, 'poblacion', False)
+                            break
+                        case '4':
+                            ordenar_paises(paises, 'poblacion', True)
+                            break
+                        case '5':
+                            ordenar_paises(paises, 'superficie', False)
+                            break
+                        case '6':
+                            ordenar_paises(paises, 'superficie', True)
+                            break
+                        case _:
+                            print("Opción inválida. Intente nuevamente.")
+
                 print("")
                 listar_paises(paises)
 
