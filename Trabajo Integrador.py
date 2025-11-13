@@ -97,7 +97,7 @@ def filtrar_por_superficie(paises, min_s=None, max_s=None):
     return resultado
 
 
-#Ordenar
+#Ordenar paises segun lo elegido
 def ordenar_paises(paises, clave, descendente):
     if clave == 'nombre':
         for i in range(len(paises) - 1):
