@@ -21,21 +21,6 @@ def pedir_entero(mensaje):
         return pedir_entero(mensaje)
 
 #Carga y validación del CSV
-import csv
-
-def convertir_entero(valor):
-    try:
-        return int(valor)
-    except ValueError:
-        return None
-
-import csv
-
-def convertir_entero(valor):
-    try:
-        return int(valor)
-    except ValueError:
-        return None
 
 def cargar_paises(archivo_csv):
     paises = []
