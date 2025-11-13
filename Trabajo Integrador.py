@@ -64,7 +64,8 @@ def buscar_por_nombre(paises, termino):
     termino = termino.lower().translate(reemplazos).strip()
     resultado = []
     for p in paises:
-        if termino == p['nombre'].lower(): 
+        nombre_normalizado = p['nombre'].lower().translate(reemplazos)
+        if termino in nombre_normalizado:
             resultado.append(p)
     return resultado
 
