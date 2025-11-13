@@ -58,9 +58,10 @@ def cargar_paises_desde_csv(ruta):
             })
     return paises, errores
 
-# Búsquedas y filtros
+#Búsquedas y filtros
 def buscar_por_nombre(paises, termino):
-    termino = termino.lower().strip()
+    reemplazos = str.maketrans("áéíóúÁÉÍÓÚ", "aeiouAEIOU")
+    termino = termino.lower().translate(reemplazos).strip()
     resultado = []
     for p in paises:
         if termino == p['nombre'].lower(): 
@@ -69,12 +70,15 @@ def buscar_por_nombre(paises, termino):
 
 
 def filtrar_por_continente(paises, continente):
-    continente = continente.lower().strip()
+    reemplazos = str.maketrans("áéíóúÁÉÍÓÚ", "aeiouAEIOU")
+    continente = continente.lower().translate(reemplazos).strip()
     resultado = []
     for p in paises:
-        if p['continente'].lower() == continente:
+        cont = p['continente'].lower().translate(reemplazos)
+        if cont == continente:
             resultado.append(p)
     return resultado
+
 
 def filtrar_por_poblacion(paises, min_p=None, max_p=None):
     resultado = []
@@ -83,12 +87,14 @@ def filtrar_por_poblacion(paises, min_p=None, max_p=None):
             resultado.append(p)
     return resultado
 
+
 def filtrar_por_superficie(paises, min_s=None, max_s=None):
     resultado = []
     for p in paises:
         if (min_s is None or p['superficie'] >= min_s) and (max_s is None or p['superficie'] <= max_s):
             resultado.append(p)
     return resultado
+
 
 #Ordenar
 def ordenar_paises(paises, clave, descendente=False):
@@ -194,7 +200,7 @@ def main():
         print("7. Mostrar todos")
         print("0. Salir")
 
-        opcion = input("Seleccione una opción: \n").strip()
+        opcion = input("Seleccione una opción: ").strip()
 
         # Validacion Menu
         if not opcion.isdigit():
@@ -205,31 +211,35 @@ def main():
         
         # Opciones
         if opcion == '1':
-            nombre = input("Ingrese nombre: ")
+            nombre = input("\nIngrese nombre: ")
+            print("")
             resultados = buscar_por_nombre(paises, nombre)
             listar_paises(resultados)
 
         elif opcion == '2':
-            cont = input("Ingrese continente: ")
+            cont = input("\nIngrese continente: ")
+            print("")
             resultados = filtrar_por_continente(paises, cont)
             listar_paises(resultados)
 
         elif opcion == '3':
-            print("Rango de población :")
+            print("\nRango de población :\n")
             min_p = pedir_entero("Mínimo: ")
             max_p = pedir_entero("Máximo: ")
+            print("")
             resultados = filtrar_por_poblacion(paises, min_p, max_p)
             listar_paises(resultados)
 
         elif opcion == '4':
-            print("Rango de superficie:")
+            print("\nRango de superficie:")
             min_s = pedir_entero("Mínimo: ")
-            max_s = pedir_entero("Máximo: ")
+            max_s = pedir_entero("Máximo: \n")
+            print("")
             resultados = filtrar_por_superficie(paises, min_s, max_s)
             listar_paises(resultados)
 
         elif opcion == '5':
-            print("1. Nombre ascendente\n2. Nombre descendente\n3. Población ascendente\n4. Población descendente\n5. Superficie ascendente\n6. Superficie descendente")
+            print("\n1. Nombre ascendente\n2. Nombre descendente\n3. Población ascendente\n4. Población descendente\n5. Superficie ascendente\n6. Superficie descendente")
             sub = input("Seleccione opción: ").strip()
             if sub == '1':
                 ordenar_paises(paises, 'nombre', False)
@@ -243,6 +253,7 @@ def main():
                 ordenar_paises(paises, 'superficie', False)
             elif sub == '6':
                 ordenar_paises(paises, 'superficie', True)
+            print("")
             listar_paises(paises)
 
         elif opcion == '6':
@@ -259,18 +270,16 @@ def main():
                 print(f" - {c}: {n}")
 
         elif opcion == '7':
+            print("")
             listar_paises(paises)
         elif not opcion.isdigit():
-            print("No ingrese texto, ingrese un número del 0 al 7.")
+            print("\nNo ingrese texto, ingrese un número del 0 al 7.")
             continue 
         elif opcion_num < 0 or opcion_num > 7:
-            print("Ingreso un número que no está en el menú.")
+            print("\nIngreso un número que no está en el menú.")
             continue
 
         elif opcion == '0':
-            print("Programa finalizado. ¡Hasta luego!")
-            break
-
-        o
-
+            print("\nPrograma finalizado.")
+   
 main()
