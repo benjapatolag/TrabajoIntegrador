@@ -222,11 +222,12 @@ def main():
             print("Intente de vuelta\n")
             continue
         else:
-            print(f"\nArchivo '{ruta}' cargado correctamente con {len(paises)} países.\n")
+            print(f"\nArchivo '{ruta}' cargado correctamente con {len(paises)} países.")
             break  
 
     opcion = ''
     while opcion != '0':
+        print(" ")
         print("    MENÚ PRINCIPAL    ")
         print("1. Buscar país por nombre")
         print("2. Filtrar por continente")
@@ -236,7 +237,7 @@ def main():
         print("6. Mostrar estadísticas")
         print("7. Mostrar todos los paises")
         print("0. Salir")
-        print("")
+        print(" ")
 
         opcion = input("Elija una opcion: ").strip()
 
@@ -252,7 +253,6 @@ def main():
             nombre = input("\nIngrese nombre: ")
             resultados = buscar_por_nombre(paises, nombre)
             listar_paises(resultados)
-            print("")
 
         elif opcion == '2':
             cont = input("\nIngrese continente: ")
@@ -323,11 +323,9 @@ def main():
             listar_paises(paises)
         elif not opcion.isdigit():
             print("No puede ingresar texto, ingrese un numero del 0 al 7")
-            print("")
             continue 
         elif opcion1 < 0 or opcion1 > 7:
             print("Ingreso un número que no está en el menú")
-            print("")
             continue
 
         elif opcion == '0':
