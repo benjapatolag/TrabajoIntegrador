@@ -21,33 +21,49 @@ def pedir_entero(mensaje):
         return pedir_entero(mensaje)
 
 #Carga y validación del CSV
-def cargar_paises(ruta):
+import csv
+
+def convertir_entero(valor):
+    try:
+        return int(valor)
+    except ValueError:
+        return None
+
+import csv
+
+def convertir_entero(valor):
+    try:
+        return int(valor)
+    except ValueError:
+        return None
+
+def cargar_paises(archivo_csv):
     paises = []
     errores = []
-    with open(ruta, encoding='utf-8') as archivo:
+
+    with open(archivo_csv, "r", encoding='utf-8-sig') as archivo:
         lector = csv.DictReader(archivo)
-        fila_num = 1
-        for fila in lector:
-            fila_num += 1
+
+        for fila_num, fila in enumerate(lector, start=2):
             nombre = fila.get('nombre', '').strip()
-            poblacion = convertir_entero(fila.get('poblacion', ''))
-            superficie = convertir_entero(fila.get('superficie', ''))
+            poblacion = convertir_entero(fila.get('poblacion', '').strip())
+            superficie = convertir_entero(fila.get('superficie', '').strip())
             continente = fila.get('continente', '').strip()
 
             if nombre == '':
-                errores.append(f"Fila {fila_num}: nombre vacío.")
+                errores.append(f"Fila {fila_num -1}: nombre vacío.")
                 continue
 
             if poblacion is None:
-                errores.append(f"Fila {fila_num} ({nombre}): población inválida.")
+                errores.append(f"Fila {fila_num -1} ({nombre or 'sin nombre'}): población inválida.")
                 continue
 
             if superficie is None:
-                errores.append(f"Fila {fila_num} ({nombre}): superficie inválida.")
+                errores.append(f"Fila {fila_num -1} ({nombre or 'sin nombre'}): superficie inválida.")
                 continue
 
             if continente == '':
-                errores.append(f"Fila {fila_num} ({nombre}): continente vacío.")
+                errores.append(f"Fila {fila_num -1} ({nombre or 'sin nombre'}): continente vacío.")
                 continue
 
             paises.append({
@@ -56,7 +72,9 @@ def cargar_paises(ruta):
                 'superficie': superficie,
                 'continente': continente
             })
+
     return paises, errores
+
 
 #Búsquedas y filtros
 def buscar_por_nombre(paises, termino):
@@ -64,8 +82,8 @@ def buscar_por_nombre(paises, termino):
     termino = termino.lower().translate(reemplazos).strip()
     resultado = []
     for p in paises:
-        nombre_normalizado = p['nombre'].lower().translate(reemplazos)
-        if termino in nombre_normalizado:
+        nombre = p['nombre'].lower().translate(reemplazos)
+        if termino in nombre:
             resultado.append(p)
     return resultado
 
@@ -193,17 +211,23 @@ def listar_paises(paises):
 
 #Main
 def main():
-    ruta = input("Ingrese el nombre del archivo CSV: ").strip()
-    paises, errores = cargar_paises(ruta)
-    if len(errores) > 0:
-        print("Errores encontrados: ")
-        for e in errores:
-            print(" -", e)
-    print(f"\n{len(paises)} países cargados correctamente.\n")
+    while True:
+        ruta = input("Ingrese el nombre del archivo CSV: ").strip()
+        paises, errores = cargar_paises(ruta)
+
+        if len(errores) > 0:
+            print(f"\nErrores encontrados en el archivo: {ruta}")
+            for e in errores:
+                print(" -", e)
+            print("Intente de vuelta\n")
+            continue
+        else:
+            print(f"\nArchivo '{ruta}' cargado correctamente con {len(paises)} países.\n")
+            break  
 
     opcion = ''
     while opcion != '0':
-        print("\n    MENÚ PRINCIPAL    ")
+        print("    MENÚ PRINCIPAL    ")
         print("1. Buscar país por nombre")
         print("2. Filtrar por continente")
         print("3. Filtrar por población")
@@ -212,6 +236,7 @@ def main():
         print("6. Mostrar estadísticas")
         print("7. Mostrar todos los paises")
         print("0. Salir")
+        print("")
 
         opcion = input("Elija una opcion: ").strip()
 
@@ -225,9 +250,9 @@ def main():
         # Opciones
         if opcion == '1':
             nombre = input("\nIngrese nombre: ")
-            print("")
             resultados = buscar_por_nombre(paises, nombre)
             listar_paises(resultados)
+            print("")
 
         elif opcion == '2':
             cont = input("\nIngrese continente: ")
@@ -297,10 +322,12 @@ def main():
             print("")
             listar_paises(paises)
         elif not opcion.isdigit():
-            print("\nNo puede ingresar texto, ingrese un numero del 0 al 7")
+            print("No puede ingresar texto, ingrese un numero del 0 al 7")
+            print("")
             continue 
         elif opcion1 < 0 or opcion1 > 7:
-            print("\nIngreso un número que no está en el menú")
+            print("Ingreso un número que no está en el menú")
+            print("")
             continue
 
         elif opcion == '0':
