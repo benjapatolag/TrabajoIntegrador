@@ -21,7 +21,7 @@ def pedir_entero(mensaje):
         return pedir_entero(mensaje)
 
 #Carga y validación del CSV
-def cargar_paises_desde_csv(ruta):
+def cargar_paises(ruta):
     paises = []
     errores = []
     with open(ruta, encoding='utf-8') as archivo:
@@ -97,7 +97,7 @@ def filtrar_por_superficie(paises, min_s=None, max_s=None):
 
 
 #Ordenar
-def ordenar_paises(paises, clave, descendente=False):
+def ordenar_paises(paises, clave, descendente):
     if clave == 'nombre':
         for i in range(len(paises) - 1):
             for j in range(i + 1, len(paises)):
@@ -128,7 +128,7 @@ def ordenar_paises(paises, clave, descendente=False):
     return paises
 
 #Estadísticas
-def pais_mayor_menor_poblacion(paises):
+def estadistica_mayor_o_menor_poblacion(paises):
     if len(paises) == 0:
         return None, None
     mayor = paises[0]
@@ -137,6 +137,18 @@ def pais_mayor_menor_poblacion(paises):
         if p['poblacion'] > mayor['poblacion']:
             mayor = p
         if p['poblacion'] < menor['poblacion']:
+            menor = p
+    return mayor, menor
+
+def estadistica_mayor_o_menor_superficie(paises):
+    if len(paises) == 0:
+        return None, None
+    mayor = paises[0]
+    menor = paises[0]
+    for p in paises:
+        if p['superficie'] > mayor['superficie']:
+            mayor = p
+        if p['superficie'] < menor['superficie']:
             menor = p
     return mayor, menor
 
@@ -156,7 +168,7 @@ def promedio_superficie(paises):
         total += p['superficie']
     return total / len(paises)
 
-def cantidad_por_continente(paises):
+def cantidad_paises_cont(paises):
     conteo = {}
     for p in paises:
         cont = p['continente']
@@ -181,9 +193,9 @@ def listar_paises(paises):
 #Main
 def main():
     ruta = input("Ingrese el nombre del archivo CSV: ").strip()
-    paises, errores = cargar_paises_desde_csv(ruta)
+    paises, errores = cargar_paises(ruta)
     if len(errores) > 0:
-        print("Errores encontrados:")
+        print("Errores encontrados: ")
         for e in errores:
             print(" -", e)
     print(f"\n{len(paises)} países cargados correctamente.\n")
@@ -197,17 +209,17 @@ def main():
         print("4. Filtrar por superficie")
         print("5. Ordenar países")
         print("6. Mostrar estadísticas")
-        print("7. Mostrar todos")
+        print("7. Mostrar todos los paises")
         print("0. Salir")
 
-        opcion = input("Seleccione una opción: ").strip()
+        opcion = input("Elija una opcion: ").strip()
 
         # Validacion Menu
         if not opcion.isdigit():
             print("No ingrese texto, ingrese un número del 0 al 7.")
             continue  
 
-        opcion_num = int(opcion)
+        opcion1 = int(opcion)
         
         # Opciones
         if opcion == '1':
@@ -223,7 +235,7 @@ def main():
             listar_paises(resultados)
 
         elif opcion == '3':
-            print("\nRango de población :\n")
+            print("\nRango de población :")
             min_p = pedir_entero("Mínimo: ")
             max_p = pedir_entero("Máximo: ")
             print("")
@@ -231,16 +243,23 @@ def main():
             listar_paises(resultados)
 
         elif opcion == '4':
-            print("\nRango de superficie:")
+            print("\nRango de superficie")
             min_s = pedir_entero("Mínimo: ")
-            max_s = pedir_entero("Máximo: \n")
+            max_s = pedir_entero("Máximo: ")
             print("")
             resultados = filtrar_por_superficie(paises, min_s, max_s)
             listar_paises(resultados)
 
         elif opcion == '5':
-            print("\n1. Nombre ascendente\n2. Nombre descendente\n3. Población ascendente\n4. Población descendente\n5. Superficie ascendente\n6. Superficie descendente")
-            sub = input("Seleccione opción: ").strip()
+            print("\n¿De que forma lo quiere ordenar?")
+            print("1. Por nombre ascendente")
+            print("2. Por nombre descendente")
+            print("3. Por población ascendente")
+            print("3. Por población descendente")
+            print("4. Por superficie ascendente")
+            print("5. Por superficie descendente")
+
+            sub = input("Elija una opción: ").strip()
             if sub == '1':
                 ordenar_paises(paises, 'nombre', False)
             elif sub == '2':
@@ -257,26 +276,30 @@ def main():
             listar_paises(paises)
 
         elif opcion == '6':
-            mayor, menor = pais_mayor_menor_poblacion(paises)
-            print("\n--- ESTADÍSTICAS ---")
+            mayor, menor = estadistica_mayor_o_menor_poblacion(paises)
+            mas, menos = estadistica_mayor_o_menor_superficie(paises)
+            print("\n    ESTADÍSTICAS    \n")
             if mayor and menor:
-                print("País con mayor población:", mostrar_pais(mayor))
-                print("País con menor población:", mostrar_pais(menor))
-            print(f"Promedio de población: {promedio_poblacion(paises):.2f}")
-            print(f"Promedio de superficie: {promedio_superficie(paises):.2f} km²")
-            print("Cantidad por continente:")
-            conteo = cantidad_por_continente(paises)
-            for c, n in conteo.items():
+                print(f"País con mayor población: {mayor['nombre']} | Población: {mayor['poblacion']}" )
+                print(f"País con menor población: {menor['nombre']} | Población: {menor['poblacion']}")
+            if mas and menos:
+                print(f"País con mayor superficie: {mas['nombre']} | Superficie: {mas['superficie']}")
+                print(f"País con menor superficie: {menos['nombre']} | Superficie: {menos['superficie']}")
+            print(f"Promedio de población: {promedio_poblacion(paises):.2f} en {len(paises)} paises")
+            print(f"Promedio de superficie: {promedio_superficie(paises):.2f} km² en {len(paises)} paises")
+            print("Cantidad de paises por continente:")
+            conteo = cantidad_paises_cont(paises)
+            for c, n in conteo.items(): #.items devuelve cada clave (c) y valor (n)
                 print(f" - {c}: {n}")
 
         elif opcion == '7':
             print("")
             listar_paises(paises)
         elif not opcion.isdigit():
-            print("\nNo ingrese texto, ingrese un número del 0 al 7.")
+            print("\nNo puede ingresar texto, ingrese un numero del 0 al 7")
             continue 
-        elif opcion_num < 0 or opcion_num > 7:
-            print("\nIngreso un número que no está en el menú.")
+        elif opcion1 < 0 or opcion1 > 7:
+            print("\nIngreso un número que no está en el menú")
             continue
 
         elif opcion == '0':
