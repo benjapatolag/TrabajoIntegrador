@@ -281,9 +281,9 @@ def main():
             print("1. Por nombre ascendente")
             print("2. Por nombre descendente")
             print("3. Por población ascendente")
-            print("3. Por población descendente")
-            print("4. Por superficie ascendente")
-            print("5. Por superficie descendente")
+            print("4. Por población descendente")
+            print("5. Por superficie ascendente")
+            print("6. Por superficie descendente")
 
             sub = input("Elija una opción: ").strip()
             if sub == '1':
